@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blog Posts</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;  
+            /* align-items: center; */
+            /* justify-content: center; */
+            /* height: 100vh; */
+        }
+        h1 {
+            color: #333;
+        }
+        .navbar {
+            background-color: #343a40;
+            /* width: 100%; */
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-brand a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .navbar-nav {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+        .nav-item a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            transition: background-color 0.3s;
+        }
+        .nav-item a:hover {
+            background-color: #495057;
+            border-radius: 5px;
+        }
+        .form-container {
+            margin-left: 300px;
+            background: #fff;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-container form p {
+            margin-bottom: 15px;
+        }
+        .form-container button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .form-container button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <a href="{% url 'home' %}">{% if user.is_authenticated %}{{request.user}}{% else %}My Blog{% endif %}</a>
+
+        </div>
+        <ul class="navbar-nav">
+            <li class="nav-item"><a href="{% url 'new_blog' %}">New Blog</a></li>
+            <li class="nav-item"><a href="{% url 'home' %}">Home</a></li>
+            {% if user.is_authenticated %}
+                <li class="nav-item"><a href="{% url 'log_out' %}">Logout</a></li>
+            {% else %}
+                <li class="nav-item"><a href="{% url 'login_page' %}">Login</a></li>
+                <li class="nav-item"><a href="{% url 'register_page' %}">Register</a></li>
+            {% endif %}
+                
+                
+
+        </ul>
+    </nav>
+    <h1>Blog Posts</h1>
+    <div class="form-container">
+        <form method="post" enctype="multipart/form-data" action="{% url 'new_blog' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Save</button>
+        </form>
+    </div>
+</body>
+</html>

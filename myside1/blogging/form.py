@@ -10,3 +10,8 @@ class BlogForm(forms.ModelForm):
     class Meta:
         model = Blog
         fields = ['title','content','image']
+
+class BlogEditForm(forms.ModelForm):
+    class Meta:
+        model = Blog
+        fields = ['title', 'content', 'image']

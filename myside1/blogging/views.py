@@ -2,7 +2,7 @@ from django.shortcuts import render,get_object_or_404, redirect
 from .models import Blog, User, Like,Follow
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
-from .form import CommentForm,BlogForm
+from .form import CommentForm,BlogForm,BlogEditForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 # Create your views here.
@@ -19,9 +19,6 @@ def blog(request):
         lis.append(Blog.objects.filter(author=i.author))
     return render(request, 'blogging/base.html', {'lis': lis})
 
-
-
-
 def login_page(request):
 
     if request.method == 'POST':
@@ -34,19 +31,19 @@ def login_page(request):
          messages.error(request, "Username and password are does not match...")
     return render(request, 'blogging/login.html')    
 
-
 def register_page(request):
-    
-    if request.method == 'POST':
-        username = request.POST['username']
-        email = request.POST['email']
-        password = request.POST['password']
-        password_confirm = request.POST['password_confirm']
-        if password == password_confirm:
+        if request.method == 'POST':
+            username = request.POST['username']
+            email = request.POST['email']
+            password = request.POST['password']
+            password_confirm = request.POST['password_confirm']
+
             if User.objects.filter(username=username).exists():
-                messages.error(request, 'Username already taken')
+                messages.error(request, 'Username already exists')
             elif User.objects.filter(email=email).exists():
-                messages.error(request, 'Email already taken')
+                messages.info(request, 'Email already exists')
+            elif password != password_confirm:
+                messages.warning(request, 'Passwords do not match')
             else:
                 user = User.objects.create(username=username, email=email)
                 user.set_password(password)
@@ -54,10 +51,7 @@ def register_page(request):
                 login(request, user)
                 messages.success(request, 'Registration successful')
                 return redirect('home')
-        else:
-            messages.error(request, 'Passwords do not match')
-    return render(request, 'blogging/register.html')
-
+        return render(request, 'blogging/register.html')
 
 @login_required
 def blog_new(request):
@@ -77,11 +71,8 @@ def log_out(request):
     logout(request)
     return redirect('login_page')
  
-
 @login_required
-def add_comment(request, id):
-    blog = get_object_or_404(Blog, id=id)
-
+def add_comment(request):
     if request.method == "POST":
         blog = get_object_or_404(Blog, id=request.POST['id'])
         form = CommentForm(request.POST)
@@ -90,9 +81,10 @@ def add_comment(request, id):
             comment.blog =blog
             comment.user =request.user
             comment.save()
+            messages.success(request,'Comment added')
             return redirect('home')
-        return render(request,'blogging/addcomment.html',{'form':form})
-    return render(request, 'blogging/addcomment.html', {'id': id})
+        return render(request,'blogging/blog.html',{'form':form})
+    return redirect('home')
 
 @login_required
 def like_post(request, id):
@@ -126,3 +118,39 @@ def follow_view(request, id):
     except:
         messages.success(request, "Already followed by you.")
         return redirect('home')
+    
+@login_required
+def unfollow_view(request, id):
+    user = request.user
+    author = Blog.objects.get(id=id).author
+    try:
+        follow_instance = Follow.objects.get(follower=user, author=author)
+        follow_instance.delete()
+        return redirect('home')
+    except:
+        messages.success(request, "Already unfollowed by you.")
+        return redirect('home')
+    
+
+@login_required
+def profile_view(request):
+    user_blogs = Blog.objects.filter(author=request.user)
+    return render(request, 'blogging/profile.html', {'user_blogs': user_blogs})
+
+@login_required
+def edit_blog(request,id):
+    blog = get_object_or_404(Blog, id =id, author=request.user)
+    if request.method == 'POST':
+        form = BlogEditForm(request.POST, request.FILES, instance=blog)
+        if form.is_valid():
+            form.save()
+            return redirect('profile_view')
+    else:
+        form = BlogEditForm(instance=blog)
+    return render(request,'blogging/edit.html',{'form': form, 'blog': blog})
+
+@login_required
+def delete_blog(request,id):
+    blog = Blog.objects.get(id=id)  
+    blog.delete()  
+    return redirect('home')

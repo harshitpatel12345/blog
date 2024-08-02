@@ -1,10 +1,9 @@
 {% load static %}
-{% load blog_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Blogs</title>
+    <title>Profile</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -86,65 +85,6 @@
             line-height: 1.6;
             color: #495057;
         }
-        .btn-primary {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-        .comment-container {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #ddd;
-        }
-        .comment-container h2 {
-            margin-bottom: 15px;
-            font-size: 1.5em;
-            color: #343a40;
-        }
-        .comment-form {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .comment-form input[type="text"] {
-            flex-grow: 1;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
-        .comment-form button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .comment-form button:hover {
-            background-color: #0056b3;
-        }
-        .comment {
-            background: #f9f9f9;
-            padding: 10px 15px;
-            margin-top: 10px;
-            border-radius: 5px;
-        }
-        .comment-author {
-            font-weight: bold;
-            color: #007bff;
-        }
-        .comment-content {
-            margin-top: 5px;
-            color: #495057;
-        }
     </style>
 </head>
 <body>
@@ -161,47 +101,28 @@
             {% else %}
                 <li class="nav-item"><a href="{% url 'login_page' %}">Login</a></li>
                 <li class="nav-item"><a href="{% url 'register_page' %}">Register</a></li>
-
             {% endif %}
         </ul>
     </nav>
     <div class="container">
-        {% for blog in blogs %}
+        <!-- <h1>{{ request.user.username }}'s Profile</h1> -->
+        <!-- <h2>Your Blogs</h2> -->
+        {% for blog in user_blogs %}
             <div class="blog-post">
                 <h1>{{ blog.title }}</h1>
                 <p class="author">By <a href="#">{{ blog.author }}</a></p>
-                <a href="{% url 'follow_view' blog.id %}"><button class="btn-primary">Follow</button></a>
                 <p class="created_at">Published on {{ blog.created_at }}</p>
                 <img src="/media/{{ blog.image }}" alt="{{ blog.title }}">
                 <div class="content">
                     {{ blog.content|safe }}
                 </div>
                 <a href="{% url 'like_post' blog.id %}"><button class="btn-primary">{{ blog.likes.count }} &#128077;</button></a>
-                <div class="comment-container">
-                    <h2>Comments</h2>
-                    {% get_blog_comments blog.id as comments %}
-                    {% if comments %}
-                        {% for comment in comments %}
-                            <div class="comment">
-                                <p class="comment-author">{{ comment.user.username }} said:</p>
-                                <p class="comment-content">{{ comment.content }}</p>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <p>No comments yet.</p>
-                    {% endif %}
-                    <div class="comment-form">
-                        <form action="{% url 'add_comment' %}" method="post">
-                            {% csrf_token %}
-                            <input type="hidden" name="id" value="{{ blog.id }}">
-                            <input type="text" name="content" placeholder="Add a comment..." required>
-                            <button type="submit">Add Comment</button>
-                        </form>
-                    </div>
-                </div>
+                
+                <a href="{% url 'edit_blog' blog.id %}"><button type ="submit">Edit</button></a>
+                <a href="{% url 'delete_blog' blog.id %}"><button type="submit">Delete</button></a>
+
             </div>
         {% endfor %}
     </div>
 </body>
 </html>
-

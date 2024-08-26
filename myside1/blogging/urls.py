@@ -15,6 +15,10 @@ urlpatterns = [
     path('profile/',profile_view,name='profile_view'),
     path('edit/<int:id>/',edit_blog,name='edit_blog'),
     path('delete/<int:id>/',delete_blog,name='delete_blog'),
+    path('premium blog /',premium_blog,name='premium_blog'),
+    path('checkout/<int:plan_id>/', checkout_session, name='checkout'),
+    path('success/', success, name='success'),
+    path('cancel/', cancel, name='cancel'),
     
 
 

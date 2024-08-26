@@ -1,0 +1,148 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flexbox Layout Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin: 20px;
+        }
+        .box {
+            flex: 1;
+            margin: 10px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            min-width: 200px; /* Ensures boxes don’t get too small */
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+        }
+        .main {
+            background-color: #ffffff;
+        }
+        .footer {
+            background-color: #343a40;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="container">
+        <div class="box header">
+            <h1>Monthly Plan</h1>
+            <p>$99/ Month</p>
+            <input type="submit" value="Enjoy Blog Monthly">
+        </div>
+
+        <div class="box main">
+            <h2>1 Year Plain</h2>
+            <p>$120/ Year</p>
+            <input type="submit" value="Enjoy Blog Yearly">
+        </div>
+
+        <div class="box footer">
+            <h3>Lifetime Plain</h3>
+            <p>$150</p>
+            <input type="submit" value="Enjoy Blog ">
+        </div>
+    </div>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Plans</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin: 20px;
+        }
+        .box {
+            flex: 1;
+            margin: 10px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            min-width: 250px; /* Ensures boxes don’t get too small */
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        .header {
+            background-color: #28a745;
+            color: white;
+        }
+        .main {
+            background-color: #ffffff;
+            color: #333;
+        }
+        .footer {
+            background-color: #343a40;
+            color: white;
+        }
+        h1, h2, h3 {
+            margin: 0 0 10px;
+        }
+        p {
+            margin: 0;
+            font-size: 1.2em;
+        }
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% for p in plan %}
+            <form action="{% url 'checkout' p.id %}" >
+                <div class="box footer">
+                    <h3>{{p.name}}</h3>
+                    <p>{{p.price}}</p>
+                    <input type="submit" value="{{p.name}}">
+                </div>
+            </form>
+        {% endfor %}
+    </div>
+</body>
+</html>

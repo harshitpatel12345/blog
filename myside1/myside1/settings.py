@@ -132,3 +132,10 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'login_page'
+
+
+AUTH_USER_MODEL = 'blogging.CustomUser'
+
+# settings.py
+STRIPE_SECRET_KEY = 'sk_test_51PlPmCDNzyUrcp6HtzeiEkLiRf1mBwQOUhsWCUfOWM9aDyRt0qgHkLElx23Q4oB7r3mpetcK2YXGqSoF4DnPZj7y00Z5zE1ff3'
+STRIPE_PUBLISHABLE_KEY = 'pk_test_51PlPmCDNzyUrcp6HTExvS8v6iDbHCadY2Jj9CxdLbGqlmPA7LvdvcvY5UgkR3GFJnLttvxCssW1dmRhN2Yc1Dqao00uGmermwF'
